@@ -5,6 +5,7 @@ import Splash from './pages/Splash';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Detail from './pages/Detail';
 import AnimateExample from './pages/AnimateExample';
+import BasicCalendar from './pages/BasicCalendar';
 
 const Stack = createStackNavigator();
 
@@ -18,6 +19,7 @@ const MainTab = () => {
       }}>
       <Tab.Screen name="Chat" component={ChatScreen} />
       <Tab.Screen name="Animated" component={AnimateExample} />
+      <Tab.Screen name="Calendar" component={BasicCalendar} />
     </Tab.Navigator>
   );
 };

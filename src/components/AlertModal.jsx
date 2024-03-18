@@ -19,7 +19,7 @@ const AlertModal = ({
       animationOutTiming={200}
       isVisible={isVisible}
       backdropOpacity={0.6}
-      style={{ margin: 0, justifyContent: 'center', alignItems: 'center'}}>
+      style={{margin: 0, justifyContent: 'center', alignItems: 'center'}}>
       <View
         style={{
           width: 320,
@@ -27,11 +27,12 @@ const AlertModal = ({
           backgroundColor: '#FFF',
           paddingTop: 10,
         }}>
-        <View style={{
-          justifyContent: 'center',
-          alignItems: 'center',
-          minHeight: 40,
-        }}>
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            minHeight: 40,
+          }}>
           <Text>{headerTitle}</Text>
         </View>
         <View
