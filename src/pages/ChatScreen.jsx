@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -7,10 +7,12 @@ import {
   Image,
   TextInput,
   FlatList,
+  TouchableOpacity,
 } from 'react-native';
 import LeftBubble from '../components/LeftBubble';
 import HeaderTitle from '../components/HeaderTitle';
 import RightBubble from '../components/RightBubble';
+import Toast from '../components/Toast';
 
 const plusicon = require('../assets/icons/Plus.png');
 
@@ -63,6 +65,8 @@ const dummy_data = [
 ];
 
 const ChatScreen = () => {
+  const [toastVisible, setToastVisible] = useState(false);
+
   return (
     <SafeAreaView style={styles.mainContainer}>
       <View style={styles.mainwrapper}>
@@ -88,15 +92,22 @@ const ChatScreen = () => {
         </View>
 
         <View style={styles.footContainer}>
-          <View style={styles.Union}>
+          <TouchableOpacity
+            onPress={() => setToastVisible(!toastVisible)}
+            style={styles.Union}>
             <Image style={styles.UnionIcon} source={plusicon} />
-          </View>
+          </TouchableOpacity>
           <TextInput
             placeholder="메세지 입력하기"
             style={styles.chattingInput}
           />
         </View>
       </View>
+      <Toast
+        context={'아직 구현되지 않은 기능입니다.'}
+        visible={toastVisible}
+        handleCancel={() => setToastVisible(false)}
+      />
     </SafeAreaView>
   );
 };
