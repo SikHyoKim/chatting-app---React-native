@@ -1,33 +1,29 @@
 import React from 'react';
 import {View, Image, Text, StyleSheet} from 'react-native';
 
-const userporfile = require('../assets/images/dummyProfile.png');
 const leftBubbleTriangle = require('../assets/icons/leftBubbleTriangle.png');
 
-const LeftBubble = ({chatText}) => {
+const LeftBubble = ({data}) => {
   return (
-
     <View style={styles.chatRowWrapper}>
-      <Image style={{width: 40, height: 40}} source={userporfile} />
+      <Image style={{width: 40, height: 40}} source={data.profileImgUrl} />
       <View>
-        <Text style={{marginLeft: 8}}>이민구</Text>
+        <Text style={{marginLeft: 8}}>{data.name}</Text>
         <View style={styles.bubbleWrapper}>
           <Image style={styles.leftRectangleimg} source={leftBubbleTriangle} />
           <View style={styles.bubbleChat}>
-            <Text style={styles.chatTextInput}>{chatText}</Text>
+            <Text style={styles.chatTextInput}>{data.content}</Text>
           </View>
         </View>
       </View>
       <View style={styles.chatTimeWrapper}>
-        <Text style={styles.chatTime}>12:03PM</Text>
+        <Text style={styles.chatTime}>{data.created_date}</Text>
       </View>
     </View>
-
   );
 };
 
 const styles = StyleSheet.create({
-
   chatRowWrapper: {
     flexDirection: 'row',
     marginTop: 16,

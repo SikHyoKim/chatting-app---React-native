@@ -5,73 +5,96 @@ import {
   SafeAreaView,
   StyleSheet,
   Image,
-  TouchableOpacity,
+  TextInput,
+  FlatList,
 } from 'react-native';
 import LeftBubble from '../components/LeftBubble';
+import HeaderTitle from '../components/HeaderTitle';
+import RightBubble from '../components/RightBubble';
 
-const leftArrow = require('../assets/icons/leftArrow.png');
-const rightBubbleTriangle = require('../assets/icons/rightBubbleTriangle.png');
+const plusicon = require('../assets/icons/Plus.png');
+
+const dummy_data = [
+  {
+    id: 1,
+    name: '이민구',
+    content: '점심 먹었니 친구야?',
+    created_date: '12:03PM',
+    position: 'left',
+    profileImgUrl: require('../assets/images/dummyProfile.png'),
+    isOpen: true,
+  },
+  {
+    id: 2,
+    name: '나',
+    content: '아니 아직 안먹었어, 너는 먹었니?',
+    position: 'right',
+    profileImgUrl: require('../assets/icons/Plus.png'),
+    isOpen: true,
+  },
+  {
+    id: 3,
+    name: '나',
+    content: '안먹었으면 같이 먹을까?? 먹고싶은 메뉴가 있으면 말해보겠니?',
+    position: 'right',
+    created_date: '12:03PM',
+    profileImgUrl: require('../assets/icons/Plus.png'),
+    isOpen: true,
+  },
+  {
+    id: 4,
+    name: '이민구',
+    content:
+      '나는 풍자 또 간집에 나온 소라 편이점의 제육볶음이 너무 먹고싶구나ㅎㅎㅎㅎ',
+    created_date: '12:03PM',
+    position: 'left',
+    profileImgUrl: require('../assets/images/dummyProfile.png'),
+    isOpen: true,
+  },
+  {
+    id: 5,
+    name: '나',
+    content: '그럼먹으러 가자구~~',
+    created_date: '12:03PM',
+    position: 'right',
+    profileImgUrl: require('../assets/icons/Plus.png'),
+    isOpen: true,
+  },
+];
 
 const ChatScreen = () => {
   return (
     <SafeAreaView style={styles.mainContainer}>
       <View style={styles.mainwrapper}>
-        <View style={styles.headerWrapper}>
-          <TouchableOpacity>
-            <Image style={styles.leftArrowIcons} source={leftArrow} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>이민구</Text>
-          <Image style={styles.leftArrowIcons} />
-        </View>
+        <HeaderTitle />
         <View style={styles.chattingscreen}>
-          <View style={styles.chatDayWrapper}>
-            <Text style={styles.chatDay}>2022년 2월 7일</Text>
-          </View>
-
-          <LeftBubble chatText={'점심 먹었니 친구야?'} />
-
-          <View style={styleMychat.myChatContainer}>
-            <View style={styleMychat.mychatRowWrapper}>
-              <View style={styleMychat.myBubbleChat}>
-                <Text style={styleMychat.chatTextInput}>
-                  아니 아직 안먹었어, 너는 먹었니?
-                </Text>
-              </View>
-              <Image
-                style={styleMychat.rigthRectangleimg}
-                source={rightBubbleTriangle}
-              />
-            </View>
-            <View style={styleMychat.mychatRowWrapper}>
-              <View style={styleMychat.mybubbleWrapper}>
-                <Text style={styles.chatTime}>읽음</Text>
-                <Text style={styles.chatTime}>12:03PM</Text>
-              </View>
-              <View style={styleMychat.myBubbleChat}>
-                <Text style={styleMychat.chatTextInput}>
-                  안먹었으면 같이 먹을까?? 먹고싶은 메뉴가 있으면 말해보겠니?
-                </Text>
-              </View>
-            </View>
-          </View>
-
-          <LeftBubble
-            chatText={
-              '나는 풍자 또 간집에 나온 소라 편이점의 제육볶음이 너무 먹고싶구나ㅎㅎㅎㅎ'
+          <FlatList
+            data={dummy_data}
+            renderItem={({item, index}) =>
+              item.position === 'left' ? (
+                <LeftBubble data={item} />
+              ) : (
+                <RightBubble data={item} nextData={dummy_data[index + 1]} />
+              )
             }
+            keyExtractor={item => item.id}
+            ListHeaderComponent={() => (
+              <View style={styles.chatDayWrapper}>
+                <Text style={styles.chatDay}>2022년 2월 7일</Text>
+              </View>
+            )}
+            showsVerticalScrollIndicator={false}
           />
-          <View style={styleMychat.myChatContainer}>
-            <View style={styleMychat.mychatRowWrapper}>
-              <View style={styleMychat.mybubbleWrapper}>
-                <Text style={styles.chatTime}>읽음</Text>
-                <Text style={styles.chatTime}>12:03PM</Text>
-              </View>
-              <View style={styleMychat.myBubbleChat}>
-                <Text style={styleMychat.chatTextInput}>그럼먹으러 가자구~~</Text>
-              </View>
-            </View>
-          </View>
+        </View>
 
+        <View style={styles.footContainer}>
+          <View style={styles.Union}>
+            <Image style={styles.UnionIcon} source={plusicon} />
+          </View>
+          <TextInput
+            placeholder="메세지 입력하기"
+            style={styles.chattingInput}
+          />
         </View>
       </View>
     </SafeAreaView>
@@ -85,26 +108,6 @@ const styles = StyleSheet.create({
   },
   mainwrapper: {
     flex: 1,
-  },
-  headerWrapper: {
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderBottomColor: '#EAEAEA',
-    paddingHorizontal: 16,
-    paddingVertical: 18,
-  },
-  leftArrowIcons: {
-    width: 40,
-    height: 40,
-  },
-  headerTitle: {
-    fontSize: 16,
-    lineHeight: 19.97,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: '#000',
   },
   chattingscreen: {
     flex: 1,
@@ -121,79 +124,33 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     marginBottom: 16,
   },
-  chatRowWrapper: {
+  footContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 16,
     flexDirection: 'row',
-    marginTop: 16,
   },
-  bubbleWrapper: {
-    flexDirection: 'row',
-    marginTop: 4,
-    marginLeft: 8,
-  },
-  leftRectangleimg: {
-    width: 8,
-    height: 8,
-    marginTop: 12,
-  },
-  bubbleChat: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    paddingHorizontal: 8,
-    paddingVertical: 8,
-    maxWidth: 232,
-  },
-  chatTextInput: {
+  Union: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
     alignItems: 'center',
-    fontSize: 15,
-    lineHeight: 22.5,
-  },
-  chatTimeWrapper: {
-    justifyContent: 'flex-end',
-    marginLeft: 4,
-  },
-  chatTime: {
-    fontSize: 12,
-    color: '#737373',
-  },
-});
-
-const styleMychat = StyleSheet.create({
-  myChatContainer: {
-    marginTop: 12,
+    borderColor: '#EFEFEF',
+    borderWidth: 1,
     marginRight: 8,
   },
-  mychatRowWrapper: {
-    marginTop: 4,
-    flexDirection: 'row',
-    marginLeft: 'auto',
+  UnionIcon: {
+    width: 12,
+    height: 12,
   },
-  myBubbleChat: {
-    backgroundColor: '#6297FF',
-    marginTop: 8,
-    borderRadius: 8,
-    paddingHorizontal: 8,
-    paddingVertical: 8,
-    maxWidth: 232,
-  },
-  chatTextInput: {
-    alignItems: 'center',
-    fontSize: 15,
-    lineHeight: 22.5,
-    color: '#FFF',
-  },
-  rigthRectangleimg: {
-    position: 'absolute',
-    right: -8,
-    width: 8,
-    height: 8,
-    marginTop: 14,
-  },
-  mybubbleWrapper: {
-    gap: 2,
-    flexDirection: 'row',
-    marginRight: 4,
-    justifyContent: 'center',
-    marginTop: 'auto',
+  chattingInput: {
+    paddingTop: 8,
+    paddingBottom: 8,
+    paddingLeft: 12,
+    borderRadius: 20,
+    borderColor: '#EFEFEF',
+    borderWidth: 1,
+    flex: 1,
   },
 });
 
