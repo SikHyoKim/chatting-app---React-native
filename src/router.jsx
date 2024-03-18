@@ -3,6 +3,8 @@ import React from 'react';
 import ChatScreen from './pages/ChatScreen';
 import Splash from './pages/Splash';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import Detail from './pages/Detail';
+import AnimateExample from './pages/AnimateExample';
 
 const Stack = createStackNavigator();
 
@@ -15,6 +17,7 @@ const MainTab = () => {
         headerShown: false,
       }}>
       <Tab.Screen name="Chat" component={ChatScreen} />
+      <Tab.Screen name="Animated" component={AnimateExample} />
     </Tab.Navigator>
   );
 };
@@ -27,6 +30,7 @@ const Router = () => {
       }}>
       <Stack.Screen name="Splash" component={Splash} />
       <Stack.Screen name="MainTab" component={MainTab} />
+      <Stack.Screen name="Detail" component={Detail} />
     </Stack.Navigator>
   );
 };

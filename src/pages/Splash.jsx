@@ -2,11 +2,10 @@ import React, {useEffect} from 'react';
 import {View, Text} from 'react-native';
 
 const Splash = ({navigation}) => {
-
   useEffect(() => {
     setTimeout(() => {
       navigation.navigate('MainTab');
-    }, 3000);
+    }, 2000);
   });
 
   return (
