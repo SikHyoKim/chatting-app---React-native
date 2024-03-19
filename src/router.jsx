@@ -7,6 +7,10 @@ import Detail from './pages/Detail';
 import AnimateExample from './pages/AnimateExample';
 import BasicCalendar from './pages/BasicCalendar';
 import BasicCarousel from './pages/BasicCarousel';
+import Home from './pages/Home';
+import Settings from './pages/Settings';
+import Notice from './pages/Notice';
+import NoticeDetail from './pages/NoticeDetail';
 
 const Stack = createStackNavigator();
 
@@ -18,10 +22,10 @@ const MainTab = () => {
       screenOptions={{
         headerShown: false,
       }}>
+      <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Chat" component={ChatScreen} />
-      <Tab.Screen name="Animated" component={AnimateExample} />
       <Tab.Screen name="BasicCalendar" component={BasicCalendar} />
-      <Tab.Screen name="BasicCarousel" component={BasicCarousel} />
+      <Tab.Screen name="Settings" component={Settings} />
     </Tab.Navigator>
   );
 };
@@ -35,6 +39,8 @@ const Router = () => {
       <Stack.Screen name="Splash" component={Splash} />
       <Stack.Screen name="MainTab" component={MainTab} />
       <Stack.Screen name="Detail" component={Detail} />
+      <Stack.Screen name="Notice" component={Notice} />
+      <Stack.Screen name="NoticeDetail" component={NoticeDetail} />
     </Stack.Navigator>
   );
 };

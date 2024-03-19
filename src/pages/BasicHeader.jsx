@@ -1,15 +1,15 @@
 import React from 'react';
-import {View, TouchableOpacity, Text, Image, StyleSheet} from 'react-native';
+import {Text, View, StyleSheet, TouchableOpacity, Image} from 'react-native';
 
 const leftArrow = require('../assets/icons/leftArrow.png');
 
-const HeaderTitle = ({name, navigation}) => {
+const BasicHeader = ({title, navigation}) => {
   return (
     <View style={styles.headerWrapper}>
       <TouchableOpacity onPress={() => navigation.goBack()}>
         <Image style={styles.leftArrowIcons} source={leftArrow} />
       </TouchableOpacity>
-      <Text style={styles.headerTitle}>{name}</Text>
+      <Text style={styles.headerTitle}>{title}</Text>
       <Image style={styles.leftArrowIcons} />
     </View>
   );
@@ -26,8 +26,8 @@ const styles = StyleSheet.create({
     paddingVertical: 18,
   },
   leftArrowIcons: {
-    width: 40,
-    height: 40,
+    width: 32,
+    height: 32,
   },
   headerTitle: {
     fontSize: 16,
@@ -38,4 +38,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HeaderTitle;
+export default BasicHeader;

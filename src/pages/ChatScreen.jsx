@@ -64,13 +64,14 @@ const dummy_data = [
   },
 ];
 
-const ChatScreen = () => {
+const ChatScreen = ({route, navigation}) => {
+  const {name} = route.params.params;
   const [toastVisible, setToastVisible] = useState(false);
 
   return (
     <SafeAreaView style={styles.mainContainer}>
       <View style={styles.mainwrapper}>
-        <HeaderTitle />
+        <HeaderTitle name={name} navigation={navigation} />
         <View style={styles.chattingscreen}>
           <FlatList
             data={dummy_data}
