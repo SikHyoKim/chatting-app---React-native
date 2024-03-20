@@ -8,14 +8,25 @@ import {
   TextInput,
   FlatList,
   TouchableOpacity,
+  Dimensions,
+  PermissionsAndroid,
+  Platform,
 } from 'react-native';
+import Modal from 'react-native-modal';
+import {CameraRoll} from '@react-native-camera-roll/camera-roll';
+import ImagePicker from 'react-native-image-crop-picker';
+
 import LeftBubble from '../components/LeftBubble';
 import HeaderTitle from '../components/HeaderTitle';
 import RightBubble from '../components/RightBubble';
 import Toast from '../components/Toast';
 
 const plusicon = require('../assets/icons/Plus.png');
+const photoButton = require('../assets/icons/chat/photoButton.png');
+const cameraButton = require('../assets/icons/chat/cameraButton.png');
+const voiceButton = require('../assets/icons/chat/voiceButton.png');
 
+const {width} = Dimensions.get('window');
 const dummy_data = [
   {
     id: 1,
@@ -65,8 +76,87 @@ const dummy_data = [
 ];
 
 const ChatScreen = ({route, navigation}) => {
+  
   const {name} = route.params.params;
   const [toastVisible, setToastVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedImage, setSelectedImage] = useState();
+
+  // AndroidPermission
+  async function hasAndroidPermission() {
+    const getCheckPermissionPromise = () => {
+      if (Platform.Version >= 33) {
+        return Promise.all([
+          PermissionsAndroid.check(
+            PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
+          ),
+          PermissionsAndroid.check(
+            PermissionsAndroid.PERMISSIONS.READ_MEDIA_VIDEO,
+          ),
+        ]).then(
+          ([hasReadMediaImagesPermission, hasReadMediaVideoPermission]) =>
+            hasReadMediaImagesPermission && hasReadMediaVideoPermission,
+        );
+      } else {
+        return PermissionsAndroid.check(
+          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        );
+      }
+    };
+
+    const hasPermission = await getCheckPermissionPromise();
+    if (hasPermission) {
+      return true;
+    }
+    const getRequestPermissionPromise = () => {
+      if (Platform.Version >= 33) {
+        return PermissionsAndroid.requestMultiple([
+          PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
+          PermissionsAndroid.PERMISSIONS.READ_MEDIA_VIDEO,
+        ]).then(
+          statuses =>
+            statuses[PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES] ===
+              PermissionsAndroid.RESULTS.GRANTED &&
+            statuses[PermissionsAndroid.PERMISSIONS.READ_MEDIA_VIDEO] ===
+              PermissionsAndroid.RESULTS.GRANTED,
+        );
+      } else {
+        return PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        ).then(status => status === PermissionsAndroid.RESULTS.GRANTED);
+      }
+    };
+
+    return await getRequestPermissionPromise();
+  }
+  async function savePicture() {
+    if (Platform.OS === 'android' && !(await hasAndroidPermission())) {
+      return;
+    }
+
+    CameraRoll.save(tag, {type, album});
+  }
+
+  const onSelect = data => {
+    console.log('data', data);
+    setSelectedImage(data);
+  };
+
+  const goToCameraRoll = () => {
+    setModalVisible(false);
+    navigation.navigate('CustomCameraRoll', {onSelect: data => onSelect(data)});
+  };
+
+  const handleCamera = () => {
+    console.log('camera');
+    ImagePicker.openCamera({
+      width: 300,
+      height: 400,
+      cropping: true,
+    }).then(image => {
+      console.log(image);
+    });
+  };
 
   return (
     <SafeAreaView style={styles.mainContainer}>
@@ -92,9 +182,15 @@ const ChatScreen = ({route, navigation}) => {
           />
         </View>
 
+        {selectedImage && (
+          <View style={{position: 'absolute', bottom: 80, right: 16}}>
+            <Image source={selectedImage} style={{width: 60, height: 60}} />
+          </View>
+        )}
+
         <View style={styles.footContainer}>
           <TouchableOpacity
-            onPress={() => setToastVisible(!toastVisible)}
+            onPress={() => setModalVisible(!modalVisible)}
             style={styles.Union}>
             <Image style={styles.UnionIcon} source={plusicon} />
           </TouchableOpacity>
@@ -103,12 +199,62 @@ const ChatScreen = ({route, navigation}) => {
             style={styles.chattingInput}
           />
         </View>
+
       </View>
       <Toast
         context={'아직 구현되지 않은 기능입니다.'}
         visible={toastVisible}
         handleCancel={() => setToastVisible(false)}
       />
+      <Modal
+        isVisible={modalVisible}
+        useNativeDriver
+        animationIn={'slideInUp'}
+        animationOut={'slideOutDown'}
+        animationInTiming={200}
+        animationOutTiming={200}
+        backdropOpacity={0}
+        style={{margin: 0, justifyContent: 'flex-end', alignItems: 'flex-end'}}>
+        <View
+          style={{
+            width,
+            paddingTop: 10,
+            backgroundColor: '#FFF',
+            height: 176,
+          }}>
+          <View style={styles.footContainer}>
+            <TouchableOpacity
+              onPress={() => setModalVisible(!modalVisible)}
+              style={styles.Union}>
+              <Image style={styles.UnionIconTransForm} source={plusicon} />
+            </TouchableOpacity>
+            <TextInput
+              placeholder="메세지 입력하기"
+              style={styles.chattingInput}
+            />
+          </View>
+          <View style={{flexDirection: 'row', marginLeft: 40, gap: 40}}>
+            <TouchableOpacity
+              style={{gap: 4, justifyContent: 'center', alignItems: 'center'}}
+              onPress={() => goToCameraRoll()}>
+              <Image source={photoButton} style={{width: 48, height: 48}} />
+              <Text style={{fontSize: 13, fontWeight: '400', color: '#828282'}}>앨범</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => handleCamera()}
+              style={{gap: 4, justifyContent: 'center', alignItems: 'center'}}>
+              <Image source={cameraButton} style={{width: 48, height: 48}} />
+              <Text style={{fontSize: 13, fontWeight: '400', color: '#828282'}}>카메라</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{gap: 4, justifyContent: 'center', alignItems: 'center'}}>
+              <Image source={voiceButton} style={{width: 48, height: 48}} />
+              <Text style={{fontSize: 13, fontWeight: '400', color: '#828282'}}>음성</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -155,10 +301,13 @@ const styles = StyleSheet.create({
     width: 12,
     height: 12,
   },
+  UnionIconTransForm: {
+    width: 12,
+    height: 12,
+    transform: [{rotate: '45deg'}],
+  },
   chattingInput: {
-    paddingTop: 8,
-    paddingBottom: 8,
-    paddingLeft: 12,
+    paddingHorizontal: 12,
     borderRadius: 20,
     borderColor: '#EFEFEF',
     borderWidth: 1,

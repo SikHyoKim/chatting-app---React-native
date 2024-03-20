@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   Dimensions,
   Image,
@@ -19,7 +19,7 @@ const {width} = Dimensions.get('window');
 
 const NoticeDetail = ({route}) => {
 
-  const [selectedFilter, setSelectedFilter] = useState();
+  const [selectedFilter, setSelectedFilter] = useState('');
   const {title, content} = route.params.item;
 
   return (
@@ -73,12 +73,12 @@ const NoticeDetail = ({route}) => {
               <Text>댓글</Text>
               <Text>4개</Text>
             </View>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <TouchableOpacity>
-                <Text>등록순</Text>
+            <View style={{flexDirection: 'row', alignItems: 'center', gap: 4}}>
+              <TouchableOpacity onPress={() => setSelectedFilter('등록순')}>
+                <Text style={selectedFilter === '등록순' ? {color: '#383838'} : {color: '#919191'}}>등록순</Text>
               </TouchableOpacity>
-              <TouchableOpacity>
-                <Text>최신순</Text>
+              <TouchableOpacity onPress={() => setSelectedFilter('최신순')}>
+                <Text style={selectedFilter === '최신순' ? {color: '#383838'} : {color: '#919191'}}>최신순</Text>
               </TouchableOpacity>
             </View>
           </View>

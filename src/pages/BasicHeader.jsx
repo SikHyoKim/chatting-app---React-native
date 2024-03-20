@@ -1,9 +1,11 @@
 import React from 'react';
 import {Text, View, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 const leftArrow = require('../assets/icons/leftArrow.png');
 
-const BasicHeader = ({title, navigation}) => {
+const BasicHeader = ({title}) => {
+  const navigation = useNavigation();
   return (
     <View style={styles.headerWrapper}>
       <TouchableOpacity onPress={() => navigation.goBack()}>
