@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   FlatList,
 } from 'react-native';
+import fonts from '../styles/fonts';
 
 const searchIcon = require('../assets/icons/search.png');
 const addIcon = require('../assets/icons/add.png');
@@ -135,7 +136,7 @@ const Home = ({navigation}) => {
             marginTop: 16,
           }}>
           <View style={{justifyContent: 'center', alignItems: 'center', gap: 2}}>
-            <Text style={{fontWeight: 'bold', fontSize: 18, color: '#333'}}>
+            <Text style={{fontSize: 18, color: '#333', fontFamily: fonts.PRETENDARD[600]}}>
               김이동
             </Text>
             <Text style={{fontWeight: '500', fontSize: 14, color: '#828282'}}>
