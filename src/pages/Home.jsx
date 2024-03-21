@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -8,6 +8,7 @@ import {
   FlatList,
 } from 'react-native';
 import fonts from '../styles/fonts';
+import {getMyFriendList, getMyInfo} from '../apis/user';
 
 const searchIcon = require('../assets/icons/search.png');
 const addIcon = require('../assets/icons/add.png');
@@ -68,6 +69,30 @@ const dummy_data = [
 ];
 
 const Home = ({navigation}) => {
+  const [myInfo, setMyInfo] = useState();
+  const [friendList, setFriendList] = useState([]);
+  const [friendNumber, setFriendNumber] = useState();
+
+  useEffect(() => {
+    async function getMyInfoApi() {
+      const res = await getMyInfo();
+      setMyInfo(res.data);
+      console.log(res);
+    }
+    getMyInfoApi();
+  }, []);
+
+  useEffect(() => {
+    getMyFriendApi(myInfo?.userId);
+  }, [myInfo?.userId]);
+
+  const getMyFriendApi = async () => {
+    const res = await getMyFriendList(myInfo?.userId);
+    console.log(res);
+    setFriendList(res.data.lists);
+    setFriendNumber(res.data.number);
+  };
+
   const renderItem = ({item}) => {
     return (
       <TouchableOpacity
@@ -78,10 +103,11 @@ const Home = ({navigation}) => {
           gap: 8,
           marginBottom: 16,
         }}>
-        <Image source={item.profileImg} style={{width: 40, height: 40}} />
+        <Image
+          source={{url: item.profileImg}} style={{width: 40, height: 40}} />
         <View style={{gap: 4}}>
           <Text style={{fontSize: 14, color: '#333'}}>{item.name}</Text>
-          <Text style={{fontSize: 13, color: '#828282'}}>{item.message}</Text>
+          <Text style={{fontSize: 13, color: '#828282'}}>{item.introduce}</Text>
         </View>
       </TouchableOpacity>
     );
@@ -98,9 +124,7 @@ const Home = ({navigation}) => {
           alignItems: 'center',
         }}>
         <Text style={{ fontWeight: '400', color: '#828282'}}>친구</Text>
-        <Text style={{fontSize: 14, color: '#4F4F4F'}}>
-          {dummy_data.length}명
-        </Text>
+        <Text style={{fontSize: 14, color: '#4F4F4F'}}>{friendNumber}명</Text>
       </View>
     );
   };
@@ -170,9 +194,9 @@ const Home = ({navigation}) => {
         </View>
         <View style={{flex: 1, marginBottom: 40}}>
           <FlatList
-            data={dummy_data}
+            data={friendList}
             renderItem={renderItem}
-            keyExtractor={item => item.id}
+            keyExtractor={item => item.userId}
             ListHeaderComponent={renderListHeader}
             showsVerticalScrollIndicator={false}
           />
